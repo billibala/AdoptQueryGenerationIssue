@@ -9,10 +9,11 @@
 import UIKit
 import CoreData
 
-class MasterViewController: UITableViewController, NSFetchedResultsControllerDelegate {
+class MasterViewController: UITableViewController, NSFetchedResultsControllerDelegate, BackgroundTimerEventHandling {
 
     var detailViewController: DetailViewController? = nil
     var managedObjectContext: NSManagedObjectContext? = nil
+    var persistentContainer: PersistentContainer? = nil
 
 
     override func viewDidLoad() {
@@ -39,6 +40,10 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
     }
 
     func insertNewObject(_ sender: Any) {
+        _ = createEvent()
+    }
+
+    func createEvent() -> Event {
         let context = self.fetchedResultsController.managedObjectContext
         let newEvent = Event(context: context)
              
@@ -54,6 +59,44 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
             let nserror = error as NSError
             fatalError("Unresolved error \(nserror), \(nserror.userInfo)")
         }
+        return newEvent
+    }
+
+    func fetchOneEvent() -> Event {
+        assert(Thread.isMainThread)
+
+        let theEvent: Event
+
+        if let anEvent = fetchedResultsController.fetchedObjects?.first {
+            theEvent = anEvent
+        } else {
+            theEvent = createEvent()
+        }
+        return theEvent
+    }
+
+    var mainContextEvent: Event!
+
+    // called by timer
+    func timerHandler() {
+        guard let container = persistentContainer else {
+            return
+        }
+        let myEvent = mainContextEvent!
+        container.performBackgroundGroupTask { context in
+            // make changes
+            let event = context.object(with: myEvent.objectID) as! Event
+            event.timestamp = NSDate()
+            context.saveAndCatch()
+        }
+
+        if arc4random() % 2 > 0 {
+            container.viewContext.perform {
+                print("yup. let's mess it up a little")
+                self.mainContextEvent.timestamp = NSDate()
+                container.viewContext.saveAndCatch()
+            }
+        }
     }
 
     // MARK: - Segues
@@ -68,6 +111,21 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
                 controller.navigationItem.leftItemsSupplementBackButton = true
             }
         }
+    }
+
+    var myTimer: BackgroundTimer? = nil
+
+    @IBAction func simulateImport(_ sender: Any) {
+        guard myTimer == nil else {
+            return
+        }
+        mainContextEvent = fetchOneEvent()
+
+        let timer = BackgroundTimer()
+        timer.handler = self
+        timer.start()
+
+        myTimer = timer
     }
 
     // MARK: - Table View
@@ -132,7 +190,7 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
         
         // Edit the section name key path and cache name if appropriate.
         // nil for section name key path means "no sections".
-        let aFetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: self.managedObjectContext!, sectionNameKeyPath: nil, cacheName: "Master")
+        let aFetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: self.managedObjectContext!, sectionNameKeyPath: nil, cacheName: nil)
         aFetchedResultsController.delegate = self
         _fetchedResultsController = aFetchedResultsController
         

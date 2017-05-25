@@ -25,6 +25,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
         let masterNavigationController = splitViewController.viewControllers[0] as! UINavigationController
         let controller = masterNavigationController.topViewController as! MasterViewController
         controller.managedObjectContext = self.persistentContainer.viewContext
+        controller.persistentContainer = self.persistentContainer
         return true
     }
 
@@ -65,14 +66,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
     }
     // MARK: - Core Data stack
 
-    lazy var persistentContainer: NSPersistentContainer = {
+    lazy var persistentContainer: PersistentContainer = {
         /*
          The persistent container for the application. This implementation
          creates and returns a container, having loaded the store for the
          application to it. This property is optional since there are legitimate
          error conditions that could cause the creation of the store to fail.
         */
-        let container = NSPersistentContainer(name: "AdoptQueryGenerationIssue")
+        let container = PersistentContainer(name: "AdoptQueryGenerationIssue")
         container.loadPersistentStores(completionHandler: { (storeDescription, error) in
             if let error = error as NSError? {
                 // Replace this implementation with code to handle the error appropriately.

@@ -14,6 +14,9 @@
 		A977E3ED1ED5B91800580AD5 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A977E3EB1ED5B91800580AD5 /* Main.storyboard */; };
 		A977E3EF1ED5B91800580AD5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A977E3EE1ED5B91800580AD5 /* Assets.xcassets */; };
 		A977E3F21ED5B91800580AD5 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A977E3F01ED5B91800580AD5 /* LaunchScreen.storyboard */; };
+		A9F392341ED6ED26005E980A /* BackgroundTimer.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9F392331ED6ED26005E980A /* BackgroundTimer.swift */; };
+		A9F392361ED72210005E980A /* PersistentContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9F392351ED72210005E980A /* PersistentContainer.swift */; };
+		A9F392381ED724B2005E980A /* NSManagedObjectContextExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9F392371ED724B2005E980A /* NSManagedObjectContextExtension.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -26,6 +29,9 @@
 		A977E3EE1ED5B91800580AD5 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		A977E3F11ED5B91800580AD5 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		A977E3F31ED5B91800580AD5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		A9F392331ED6ED26005E980A /* BackgroundTimer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BackgroundTimer.swift; sourceTree = "<group>"; };
+		A9F392351ED72210005E980A /* PersistentContainer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PersistentContainer.swift; sourceTree = "<group>"; };
+		A9F392371ED724B2005E980A /* NSManagedObjectContextExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NSManagedObjectContextExtension.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -66,6 +72,9 @@
 				A977E3F01ED5B91800580AD5 /* LaunchScreen.storyboard */,
 				A977E3F31ED5B91800580AD5 /* Info.plist */,
 				A977E3E41ED5B91800580AD5 /* AdoptQueryGenerationIssue.xcdatamodeld */,
+				A9F392331ED6ED26005E980A /* BackgroundTimer.swift */,
+				A9F392351ED72210005E980A /* PersistentContainer.swift */,
+				A9F392371ED724B2005E980A /* NSManagedObjectContextExtension.swift */,
 			);
 			path = AdoptQueryGenerationIssue;
 			sourceTree = "<group>";
@@ -144,6 +153,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				A977E3E31ED5B91800580AD5 /* AppDelegate.swift in Sources */,
+				A9F392381ED724B2005E980A /* NSManagedObjectContextExtension.swift in Sources */,
+				A9F392341ED6ED26005E980A /* BackgroundTimer.swift in Sources */,
+				A9F392361ED72210005E980A /* PersistentContainer.swift in Sources */,
 				A977E3E61ED5B91800580AD5 /* AdoptQueryGenerationIssue.xcdatamodeld in Sources */,
 				A977E3E81ED5B91800580AD5 /* MasterViewController.swift in Sources */,
 				A977E3EA1ED5B91800580AD5 /* DetailViewController.swift in Sources */,
@@ -312,6 +324,7 @@
 				A977E3F81ED5B91800580AD5 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 
