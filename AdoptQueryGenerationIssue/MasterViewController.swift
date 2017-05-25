@@ -75,26 +75,38 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
         return theEvent
     }
 
+    func randomEvent() -> Event {
+        guard let results = fetchedResultsController.fetchedObjects else {
+            return Event(context: managedObjectContext!)
+        }
+
+        let idx = Int(arc4random()) % results.count
+        return results[idx]
+    }
+
     var mainContextEvent: Event!
+    var totalMessingAround = 0
 
     // called by timer
     func timerHandler() {
         guard let container = persistentContainer else {
             return
         }
-        let myEvent = mainContextEvent!
-        container.performBackgroundGroupTask { context in
-            // make changes
-            let event = context.object(with: myEvent.objectID) as! Event
-            event.timestamp = NSDate()
-            context.saveAndCatch()
-        }
+        DispatchQueue.main.async {
+            let myEvent = self.randomEvent()
+            container.performBackgroundGroupTask { context in
+                // make changes
+                let event = context.object(with: myEvent.objectID) as! Event
+                event.timestamp = NSDate()
+                context.saveAndCatch()
+            }
 
-        if arc4random() % 2 > 0 {
-            container.viewContext.perform {
-                print("yup. let's mess it up a little")
-                self.mainContextEvent.timestamp = NSDate()
-                container.viewContext.saveAndCatch()
+            if arc4random() % 2 > 0 {
+                container.viewContext.perform {
+                    self.totalMessingAround += 1
+                    myEvent.timestamp = NSDate()
+                    container.viewContext.saveAndCatch()
+                }
             }
         }
     }
@@ -207,37 +219,8 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
     }    
     var _fetchedResultsController: NSFetchedResultsController<Event>? = nil
 
-    func controllerWillChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
-        tableView.beginUpdates()
-    }
-
-    func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange sectionInfo: NSFetchedResultsSectionInfo, atSectionIndex sectionIndex: Int, for type: NSFetchedResultsChangeType) {
-        switch type {
-            case .insert:
-                tableView.insertSections(IndexSet(integer: sectionIndex), with: .fade)
-            case .delete:
-                tableView.deleteSections(IndexSet(integer: sectionIndex), with: .fade)
-            default:
-                return
-        }
-    }
-
-    func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
-        switch type {
-            case .insert:
-                tableView.insertRows(at: [newIndexPath!], with: .fade)
-            case .delete:
-                tableView.deleteRows(at: [indexPath!], with: .fade)
-            case .update:
-                configureCell(tableView.cellForRow(at: indexPath!)!, withEvent: anObject as! Event)
-            case .move:
-                configureCell(tableView.cellForRow(at: indexPath!)!, withEvent: anObject as! Event)
-                tableView.moveRow(at: indexPath!, to: newIndexPath!)
-        }
-    }
-
     func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
-        tableView.endUpdates()
+        tableView.reloadData()
     }
 
     /*
