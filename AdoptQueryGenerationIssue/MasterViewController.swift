@@ -140,6 +140,13 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
         myTimer = timer
     }
 
+    @IBAction func stopImport(_ sender: Any) {
+        myTimer?.stop()
+        myTimer = nil
+
+        persistentContainer?.importBackgroundContext.reset()
+    }
+
     // MARK: - Table View
 
     override func numberOfSections(in tableView: UITableView) -> Int {

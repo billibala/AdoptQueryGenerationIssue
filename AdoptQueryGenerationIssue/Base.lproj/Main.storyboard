@@ -123,6 +123,12 @@
                                 <action selector="simulateImport:" destination="7bK-jq-Zjz" id="22K-6G-ftX"/>
                             </connections>
                         </barButtonItem>
+                        <barButtonItem style="plain" systemItem="flexibleSpace" id="Y3Y-e9-aDf"/>
+                        <barButtonItem title="Stop" id="hUp-57-waJ">
+                            <connections>
+                                <action selector="stopImport:" destination="7bK-jq-Zjz" id="CFb-ej-1sb"/>
+                            </connections>
+                        </barButtonItem>
                     </toolbarItems>
                     <navigationItem key="navigationItem" title="Master" id="Zdf-7t-Un8"/>
                 </tableViewController>
