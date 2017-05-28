@@ -1,5 +1,5 @@
 //
-//  PersistentContainer.swift
+//  HeadPinningAndAutoMergingPersistentContainer.swift
 //  AdoptQueryGenerationIssue
 //
 //  Created by Bill on 5/25/17.
@@ -9,7 +9,7 @@
 import Foundation
 import CoreData
 
-final class PersistentContainer: NSPersistentContainer {
+class HeadPinningAndAutoMergingPersistentContainer: NSPersistentContainer {
     let backgroundGroup = DispatchGroup()
 
     var importBackgroundContext: NSManagedObjectContext {
@@ -26,7 +26,7 @@ final class PersistentContainer: NSPersistentContainer {
     /// When there's no import tasks, will be deallocated
     private var _importBackgroundContext: NSManagedObjectContext?
 
-    private func configure(managedObjectContext context: NSManagedObjectContext) {
+    fileprivate func configure(managedObjectContext context: NSManagedObjectContext) {
         // ======
         // Base on recommendation in WWDC 2016 - http://asciiwwdc.com/2016/sessions/242
         //
@@ -79,5 +79,28 @@ final class PersistentContainer: NSPersistentContainer {
             self.backgroundGroup.leave()
         }
     }
-    
 }
+
+//final class AutoMergingPersistentContainer: HeadPinningAndAutoMergingPersistentContainer {
+//    override fileprivate func configure(managedObjectContext context: NSManagedObjectContext) {
+//        context.automaticallyMergesChangesFromParent = true
+//    }
+//}
+//
+//final class SelfMergingPersistentContainer: HeadPinningAndAutoMergingPersistentContainer {
+//    override fileprivate func configure(managedObjectContext context: NSManagedObjectContext) {
+//        NotificationCenter.default.addObserver(forName: .NSManagedObjectContextDidSave, object: context, queue: nil) { [weak self] notification in
+//            self?.handle(context: context, didSaveNotification: notification)
+//        }
+//    }
+//
+//    func handle(context: NSManagedObjectContext, didSaveNotification: Notification) {
+//        if context === viewContext {
+//            importBackgroundContext.performMergeChanges(from: didSaveNotification)
+//        }
+//        if context === importBackgroundContext {
+//            viewContext.performMergeChanges(from: didSaveNotification)
+//        }
+//    }
+//}
+

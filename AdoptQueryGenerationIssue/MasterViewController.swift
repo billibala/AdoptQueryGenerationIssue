@@ -13,7 +13,7 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
 
     var detailViewController: DetailViewController? = nil
     var managedObjectContext: NSManagedObjectContext? = nil
-    var persistentContainer: PersistentContainer? = nil
+    var persistentContainer: HeadPinningAndAutoMergingPersistentContainer? = nil
 
 
     override func viewDidLoad() {
@@ -96,11 +96,22 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
             let myEvent = self.randomEvent()
             container.performBackgroundGroupTask { context in
                 // make changes
-                let event = context.object(with: myEvent.objectID) as! Event
+                // force it to go through the SQLite layer to
+                // simulate the situation in my production code
+                // where, when reconciling data from the server,
+                // the logic needs to perform a fetch of existing
+                // events in the database.
+                let request: NSFetchRequest<Event> = Event.fetchRequest()
+                request.predicate = NSPredicate(format: "SELF = %@", myEvent.objectID)
+                request.returnsObjectsAsFaults = false
+                let result = try! context.fetch(request)
+                let event = result.first!
                 event.timestamp = NSDate()
                 context.saveAndCatch()
             }
 
+            // try to mess things up a little here by introducing
+            // conflicting changes.
             if arc4random() % 2 > 0 {
                 container.viewContext.perform {
                     self.totalMessingAround += 1

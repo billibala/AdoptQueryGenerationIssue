@@ -19,4 +19,10 @@ extension NSManagedObjectContext {
         }
     }
 
+    func performMergeChanges(from notification: Notification) {
+        perform {
+            self.mergeChanges(fromContextDidSave: notification)
+        }
+    }
+
 }
